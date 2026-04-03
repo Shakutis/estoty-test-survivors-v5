@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using Code.Gameplay.Battle;
+using Code.Gameplay.Battle.Configs;
 using Code.Gameplay.Characters.Enemies;
 using Code.Gameplay.Characters.Enemies.Configs;
 using Code.Gameplay.Characters.Heroes.Configs;
@@ -13,9 +15,10 @@ namespace Code.Infrastructure.ConfigsManagement
 	{
 		private readonly IAssetsService _assets;
 
-		private Dictionary<EnemyId, EnemyConfig> _enemiesById = new();
-		private Dictionary<PickUpId, PickUpConfig> _pickupsById = new();
-
+		private Dictionary<EnemyId, EnemyConfig> _enemiesById;
+		private Dictionary<PickUpId, PickUpConfig> _pickupsById;
+        private Dictionary<BattleId, BattleConfig> _battleById;
+        
 		public HeroConfig HeroConfig { get; private set; }
 
 		public ConfigsService(IAssetsService assets)
@@ -25,42 +28,39 @@ namespace Code.Infrastructure.ConfigsManagement
 		
 		public void Load()
 		{
-			LoadHeroConfig();
-			LoadEnemyConfigs();
-			LoadPickUpConfigs();
-		}
+            HeroConfig = _assets.LoadAssetFromResources<HeroConfig>("Configs/HeroConfig");
 
-		private void LoadPickUpConfigs()
-		{
-			var pickUpConfigs = _assets.LoadAssetsFromResources<PickUpConfig>("Configs/PickUps");
-			_pickupsById = pickUpConfigs.ToList().ToDictionary(x => x.Id, x => x);
-		}
+            _enemiesById = LoadToDictionary<EnemyId, EnemyConfig>("Configs/Enemies", x => x.Id);
+            _pickupsById = LoadToDictionary<PickUpId, PickUpConfig>("Configs/PickUps", x => x.Id);
+            _battleById = LoadToDictionary<BattleId, BattleConfig>("Configs/Battles", x => x.Id);
+        }
 
-		private void LoadHeroConfig()
-		{
-			HeroConfig = _assets.LoadAssetFromResources<HeroConfig>("Configs/HeroConfig");
-		}
+        public EnemyConfig GetEnemyConfig(EnemyId id) => GetConfig(_enemiesById, id);
 
-		private void LoadEnemyConfigs()
-		{
-			var enemyConfigs = _assets.LoadAssetsFromResources<EnemyConfig>("Configs/Enemies");
-			_enemiesById = enemyConfigs.ToList().ToDictionary(x => x.Id, x => x);
-		}
+        public PickUpConfig GetPickUpConfig(PickUpId id) => GetConfig(_pickupsById, id);
 
-		public EnemyConfig GetEnemyConfig(EnemyId id)
-		{
-			if (_enemiesById.TryGetValue(id, out EnemyConfig enemyConfig))
-				return enemyConfig;
+        public BattleConfig GetBattleConfig(BattleId id) => GetConfig(_battleById, id);
 
-			throw new KeyNotFoundException($"Enemy config with id {id} not found");
-		}
-		
-		public PickUpConfig GetPickUpConfig(PickUpId id)
-		{
-			if (_pickupsById.TryGetValue(id, out PickUpConfig pickUpConfig))
-				return pickUpConfig;
+        private Dictionary<TKey, TValue> LoadToDictionary<TKey, TValue>(string path, Func<TValue, TKey> keySelector) where TValue : UnityEngine.Object
+        {
+            TValue[] assets = _assets.LoadAssetsFromResources<TValue>(path);
 
-			throw new KeyNotFoundException($"PickUp config with id {id} not found");
-		}
+            var dict = new Dictionary<TKey, TValue>(assets.Length);
+
+            foreach (TValue asset in assets)
+            {
+                dict.Add(keySelector(asset), asset);
+            }
+
+            return dict;
+        }
+
+        private TValue GetConfig<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey id)
+        {
+            if (dictionary.TryGetValue(id, out TValue config))
+                return config;
+
+            throw new KeyNotFoundException($"{typeof(TValue).Name} with id {id} not found");
+        }
 	}
 }

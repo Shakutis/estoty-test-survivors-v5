@@ -1,3 +1,5 @@
+using Code.Gameplay.Battle;
+using Code.Gameplay.Battle.Configs;
 using Code.Gameplay.Characters.Enemies;
 using Code.Gameplay.Characters.Enemies.Configs;
 using Code.Gameplay.Characters.Heroes.Configs;
@@ -12,5 +14,6 @@ namespace Code.Infrastructure.ConfigsManagement
 		void Load();
 		EnemyConfig GetEnemyConfig(EnemyId id);
 		PickUpConfig GetPickUpConfig(PickUpId id);
+		BattleConfig GetBattleConfig(BattleId id);
 	}
 }
