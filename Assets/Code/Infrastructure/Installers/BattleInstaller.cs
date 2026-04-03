@@ -38,6 +38,7 @@ namespace Code.Infrastructure.Installers
 			Container.BindInterfacesTo<EnemyFactory>().AsSingle();
 			Container.BindInterfacesTo<EnemyProvider>().AsSingle();
 			Container.BindInterfacesTo<EnemyDeathTracker>().AsSingle();
+			Container.BindInterfacesTo<EnemySpawner>().AsSingle();
 		}
 
 		private void BindHeroServices()
