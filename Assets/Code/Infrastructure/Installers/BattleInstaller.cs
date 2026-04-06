@@ -1,3 +1,4 @@
+using Code.Gameplay.Battle.Services;
 using Code.Gameplay.Cameras.Services;
 using Code.Gameplay.Characters.Enemies.Services;
 using Code.Gameplay.Characters.Heroes.Services;
@@ -26,6 +27,7 @@ namespace Code.Infrastructure.Installers
 		private void BindCombatServices()
 		{
 			Container.BindInterfacesTo<ProjectileFactory>().AsSingle();
+			Container.BindInterfacesTo<DifficultyService>().AsSingle();
 		}
 
 		private void BindCameraServices()

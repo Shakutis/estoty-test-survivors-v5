@@ -17,3 +17,8 @@ MonoBehaviour:
   Health: 60
   MovementSpeed: 0.75
   Damage: 10
+  DifficultyGrowthModifiers:
+  - StatType: 1
+    GrowthPerMinute: 5
+  - StatType: 3
+    GrowthPerMinute: 2
