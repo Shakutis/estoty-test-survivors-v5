@@ -46,8 +46,7 @@ namespace Code.Gameplay.Characters.Heroes.Services
 				.SetBaseStat(StatType.ShootCooldown, heroConfig.ShootCooldown)
 				.SetBaseStat(StatType.Damage, heroConfig.Damage);
 
-			hero.GetComponent<Health>()
-				.Setup(heroConfig.Health, heroConfig.Health);
+			hero.GetComponent<Health>().Setup();
 			
 			hero.GetComponent<GunOwner>().OwnedGun
 				.GetComponent<Stats>()

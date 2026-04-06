@@ -1,4 +1,5 @@
 using Code.Gameplay.Battle;
+using Code.Gameplay.Battle.Services;
 using Code.Gameplay.Cameras.Services;
 using Code.Gameplay.Characters.Enemies.Services;
 using Code.Gameplay.Characters.Heroes.Services;
@@ -26,6 +27,7 @@ namespace Code.Infrastructure.Installers
 		private IUiService _uiService;
 		private IEnemySpawner _enemySpawner;
         private IHeroProvider _heroProvider;
+		private IDifficultyService _difficultyService;
 
         [Inject]
 		private void Construct(
@@ -36,7 +38,8 @@ namespace Code.Infrastructure.Installers
 			IUIRootProvider uiRootProvider,
 			IUiService uiService,
 			IEnemySpawner enemySpawner,
-            IHeroProvider heroProvider
+            IHeroProvider heroProvider,
+			IDifficultyService difficultyService
         )
 		{
 			_uiService = uiService;
@@ -47,6 +50,7 @@ namespace Code.Infrastructure.Installers
 			_cameraProvider = cameraProvider;
             _enemySpawner = enemySpawner;
             _heroProvider = heroProvider;
+			_difficultyService = difficultyService;
         }
     
 		public void Initialize()
@@ -56,6 +60,7 @@ namespace Code.Infrastructure.Installers
 			_uiRootProvider.SetUiRoot(_uiRoot);
 			
 			_heroFactory.CreateHero(Vector3.zero, Quaternion.identity);
+			_difficultyService.StartTrackingDifficulty(_battleId);
             _enemySpawner.StartSpawning(_battleId);
 
 			SubscribeToOnHeroDeath();
@@ -66,14 +71,18 @@ namespace Code.Infrastructure.Installers
         public void Dispose()
         {
             if (_heroProvider?.Health != null)
+			{
                 _heroProvider.Health.OnDeath -= _enemySpawner.StopSpawning;
+                _heroProvider.Health.OnDeath -= _difficultyService.StopTrackingDifficulty;
+            }
         }
 
-		private void SubscribeToOnHeroDeath()
+        private void SubscribeToOnHeroDeath()
 		{
             if (_heroProvider.Health != null)
 			{
                 _heroProvider.Health.OnDeath += _enemySpawner.StopSpawning;
+                _heroProvider.Health.OnDeath += _difficultyService.StopTrackingDifficulty;
             }
 			else
 			{

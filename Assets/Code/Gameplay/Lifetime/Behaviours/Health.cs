@@ -30,11 +30,10 @@ namespace Code.Gameplay.Lifetime.Behaviours
 			_stats.OnStatChanged -= HandleStatChanged;
 		}
 
-		public void Setup(float currentHealth, float maxHealth)
+		public void Setup()
 		{
-			CurrentHealth = currentHealth;
-			MaxHealth = maxHealth;
-		}
+            CurrentHealth = MaxHealth;
+        }
 		
 		public void ApplyDamage(float damage)
 		{
