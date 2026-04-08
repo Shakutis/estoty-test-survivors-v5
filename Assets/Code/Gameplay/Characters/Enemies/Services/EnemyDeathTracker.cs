@@ -10,7 +10,9 @@ namespace Code.Gameplay.Characters.Enemies.Services
 		
 		public int TotalKilledEnemies { get; private set; }
 
-		public EnemyDeathTracker(IEnemyProvider enemyProvider)
+        public event Action OnEnemyDied;
+
+        public EnemyDeathTracker(IEnemyProvider enemyProvider)
 		{
 			_enemyProvider = enemyProvider;
 			
@@ -43,6 +45,7 @@ namespace Code.Gameplay.Characters.Enemies.Services
 		private void HandleEnemyDeath()
 		{
 			TotalKilledEnemies++;
-		}
+            OnEnemyDied?.Invoke();
+        }
 	}
 }

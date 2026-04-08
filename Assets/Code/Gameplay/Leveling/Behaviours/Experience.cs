@@ -3,20 +3,20 @@ using UnityEngine;
 
 namespace Code.Gameplay.Leveling.Behaviours
 {
-   public class Experience : MonoBehaviour
+    public class Experience : MonoBehaviour
     {
-        [SerializeField] private int _currentExperience;
-        [Min(1)][SerializeField] private int _experienceToLevelUp;
+        [field: SerializeField] public int CurrentExperience { get; private set; }
+        [field: SerializeField, Min(1)] public int ExperienceToLevelUp { get; private set; } = 10;
 
         public event Action<int> OnExperienceChanged;
         public event Action OnLevelUp;
 
         public void AddExperience(int amount)
         {
-            _currentExperience += amount;
-            OnExperienceChanged?.Invoke(_currentExperience);
+            CurrentExperience += amount;
+            OnExperienceChanged?.Invoke(CurrentExperience);
 
-            if (_currentExperience >= _experienceToLevelUp)
+            if (CurrentExperience >= ExperienceToLevelUp)
             {
                 LevelUp();
             }
@@ -24,10 +24,8 @@ namespace Code.Gameplay.Leveling.Behaviours
 
         private void LevelUp()
         {
-            _currentExperience -= _experienceToLevelUp;
+            CurrentExperience -= ExperienceToLevelUp;
             OnLevelUp?.Invoke();
-
-            Debug.Log("Level Up!");
         }
     }
 }
