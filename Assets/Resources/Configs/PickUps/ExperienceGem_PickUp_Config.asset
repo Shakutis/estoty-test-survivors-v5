@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64e7d37e5b8b446485087d9d590002fa, type: 3}
   m_Name: ExperienceGem_PickUp_Config
   m_EditorClassIdentifier: 
-  Id: 0
-  Prefab: {fileID: 0}
+  Id: 2
+  Prefab: {fileID: 8225670401643395755, guid: 004fa6709b20d4114ae730c733dec29f, type: 3}
