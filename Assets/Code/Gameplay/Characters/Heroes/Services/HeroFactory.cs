@@ -1,6 +1,8 @@
+using Code.Gameplay.Characters.Heroes.Behaviours;
 using Code.Gameplay.Characters.Heroes.Configs;
 using Code.Gameplay.Guns.Behaviours;
 using Code.Gameplay.Identification.Behaviours;
+using Code.Gameplay.Leveling.Behaviours;
 using Code.Gameplay.Lifetime.Behaviours;
 using Code.Gameplay.UnitStats;
 using Code.Gameplay.UnitStats.Behaviours;
@@ -30,29 +32,32 @@ namespace Code.Gameplay.Characters.Heroes.Services
 			_identifiers = identifiers;
 		}
 		
-		public Behaviours.Hero CreateHero(Vector3 at, Quaternion rotation)
+		public Hero CreateHero(Vector3 at, Quaternion rotation)
 		{
 			HeroConfig heroConfig = _configsService.HeroConfig;
-			Behaviours.Hero hero = _instantiateService.InstantiatePrefabForComponent(heroConfig.Prefab, at, rotation);
-			
+			Hero hero = _instantiateService.InstantiatePrefabForComponent(heroConfig.Prefab, at, rotation);
+			Stats stats = hero.GetComponent<Stats>();
+			Health health = hero.GetComponent<Health>();
+			Experience experience = hero.GetComponent<Experience>();
+
 			hero.GetComponent<Id>()
 				.Setup(_identifiers.Next());
-			
-			hero.GetComponent<Stats>()
-				.SetBaseStat(StatType.MaxHealth, heroConfig.Health)
+
+            stats
+                .SetBaseStat(StatType.MaxHealth, heroConfig.Health)
 				.SetBaseStat(StatType.MovementSpeed, heroConfig.MovementSpeed)
 				.SetBaseStat(StatType.ProjectileSpeed, heroConfig.ProjectileSpeed)
 				.SetBaseStat(StatType.VisionRange, heroConfig.VisionRange)
 				.SetBaseStat(StatType.ShootCooldown, heroConfig.ShootCooldown)
 				.SetBaseStat(StatType.Damage, heroConfig.Damage);
 
-			hero.GetComponent<Health>().Setup();
+            health.Setup();
 			
 			hero.GetComponent<GunOwner>().OwnedGun
 				.GetComponent<Stats>()
 				.SetBaseStat(StatType.RotationSpeed, heroConfig.GunRotationSpeed);
 			
-			_heroProvider.SetHero(hero);
+			_heroProvider.SetHero(hero, stats, health, experience);
 			
 			return hero;
 		}
