@@ -1,4 +1,4 @@
- using Code.Gameplay.Lifetime.Behaviours;
+using Code.Gameplay.Lifetime.Behaviours;
 using UnityEngine;
 
 namespace Code.Gameplay.PickUps.Behaviours
