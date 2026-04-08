@@ -1,3 +1,5 @@
+using Code.Gameplay.Characters.Heroes.Behaviours;
+using Code.Gameplay.Leveling.Behaviours;
 using Code.Gameplay.Lifetime.Behaviours;
 using Code.Gameplay.UnitStats.Behaviours;
 
@@ -5,9 +7,10 @@ namespace Code.Gameplay.Characters.Heroes.Services
 {
 	public interface IHeroProvider
 	{
-		Behaviours.Hero Hero { get; }
+		Hero Hero { get; }
 		Health Health { get; }
 		Stats Stats { get; }
-		void SetHero(Behaviours.Hero hero);
+        Experience Experience { get; }
+        void SetHero(Hero hero, Stats stats, Health health, Experience experience);
 	}
 }
