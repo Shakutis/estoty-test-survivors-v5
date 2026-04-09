@@ -6,7 +6,9 @@ namespace Code.Gameplay.Leveling.Behaviours
     public class Experience : MonoBehaviour
     {
         [field: SerializeField] public int CurrentExperience { get; private set; }
-        [field: SerializeField, Min(1)] public int ExperienceToLevelUp { get; private set; } = 10;
+
+        [SerializeField, Min(1)] private int _experienceToLevelUp = 10;
+        public int ExperienceToLevelUp => _experienceToLevelUp;
 
         public event Action<int> OnExperienceChanged;
         public event Action OnLevelUp;
